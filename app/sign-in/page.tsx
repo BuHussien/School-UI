@@ -1,6 +1,8 @@
-const LoginPage = () => {
+import { db } from "@/prisma/db";
+const LoginPage = async () => {
+  const admins = await db.orm.public.Student.all();
   return (
-    <div>Login Page</div>
+    <div>{admins.map(admin => <h1>{admin.username}</h1>)}</div>
   );
 };
 
