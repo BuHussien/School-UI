@@ -2,27 +2,23 @@
 import Image from "next/image";
 import { JSX, useState } from "react";
 import TeacherForm from "./forms/TeacherForm";
-
-const SimpleForm = ({ table, type, data }: { table: string; type: "create" | "update"; data?: any; }) => (
-  <form className="p-4 flex flex-col gap-4">
-    <h1 className="font-medium"> {type === "create" ? "Create" : "Update"} {table} </h1>
-    {data?.name && <input name="name" defaultValue={data.name} />}
-    <button className="bg-lamaSky text-white py-2 px-4 rounded-md border-none w-max">Save</button>
-  </form>
-);
+import StudentForm from "./forms/StudentForm";
+import ParentForm from "./forms/ParentForm";
 
 const forms: {[key: string]: (type: "create" | "update", data?: any) => JSX.Element;} = {
-  teacher: (type, data) => (
-    <SimpleForm table="teacher" type={type} data={data} />
-  ),
-  student: (type, data) => (
-    <SimpleForm table="student" type={type} data={data} />
-  ),
+  teacher: (type, data) => (<TeacherForm type={type} data={data} />),
+  student: (type, data) => (<StudentForm type={type} data={data} />),
+  parent: (type, data) => (<ParentForm type={type} data={data} />),
+  
 };
 
-const FormModal = ({table,type,data,id}: { table: "teacher" | "student" | "parent" | "subject" | "class" | "lesson" | "exam"
-  | "assignment" | "result" | "attendance" | "event" | "announcement"; type: "create" | "update" | "delete"; data?: any; id?: number;
-}) => {
+type TFormModal = {
+  table:  "teacher" | "student" | "parent" | "subject" | "class" | "lesson" | "exam" | "assignment" | "result" | "attendance" | "event" | "announcement";
+  type: "create" | "update" | "delete";
+  data?: any;
+  id?: number;
+}
+const FormModal = ({ table, type, data, id } : TFormModal) => {
   const size = type === "create" ? "w-8 h-8" : "w-7 h-7";
   const bgColor = type === "create" ? "bg-lamaYellow" : type === "update" ? "bg-lamaSky" : "bg-lamaPurple";
   
@@ -37,7 +33,7 @@ const FormModal = ({table,type,data,id}: { table: "teacher" | "student" | "paren
           Delete
         </button>
       </form>
-    ) : (<TeacherForm type={"create"}/>);
+    ) : type === "create" || type === "update" ? (forms[table](type,data)) : "Form Not Found"
   };
 
   return (
