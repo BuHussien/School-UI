@@ -1,4 +1,10 @@
-// use prisma-8
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
 
 model Admin {
   id       String @id
@@ -40,7 +46,7 @@ model Teacher {
   bloodType String
   sex       UserSex
   createdAt DateTime  @default(now())
-  teacherSubjects TeacherSubject[]
+  subjects  Subject[]
   lessons   Lesson[]
   classes   Class[]
   birthday  DateTime
@@ -84,7 +90,7 @@ model Class {
 model Subject {
   id       Int       @id @default(autoincrement())
   name     String    @unique
-  teacherSubjects TeacherSubject[]
+  teachers Teacher[]
   lessons  Lesson[]
 }
 
@@ -172,15 +178,6 @@ model Announcement {
   class   Class? @relation(fields: [classId], references: [id])
 }
 
-model TeacherSubject {
-  teacherId String
-  subjectId Int
-
-  teacher Teacher @relation(fields: [teacherId], references: [id])
-  subject Subject @relation(fields: [subjectId], references: [id])
-
-  @@id([teacherId, subjectId])
-}
 enum UserSex {
   MALE
   FEMALE

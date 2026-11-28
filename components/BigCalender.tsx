@@ -4,9 +4,12 @@ import { Calendar, momentLocalizer, View, Views } from "react-big-calendar";
 import moment from "moment";
 import { calendarEvents } from "@/lib/data";
 import "react-big-calendar/lib/css/react-big-calendar.css";
-import { useState } from "react";
+import { Suspense, useState } from "react";
 
 const localizer = momentLocalizer(moment);
+
+const MIN_TIME = new Date(2025, 1, 0, 8, 0, 0);
+const MAX_TIME = new Date(2025, 1, 0, 15, 0, 0);
 
 const BigCalendar = () => {
   const [view, setView] = useState<View>(Views.WORK_WEEK);
@@ -16,18 +19,20 @@ const BigCalendar = () => {
   };
 
   return (
-    <Calendar
-      localizer={localizer}
-      events={calendarEvents}
-      startAccessor="start"
-      endAccessor="end"
-      views={["work_week", "day"]}
-      view={view}
-      style={{ height: "98%" }}
-      onView={handleOnChangeView}
-      min={new Date(2025, 1, 0, 8, 0, 0)}
-      max={new Date(2025, 1, 0, 15, 0, 0)}
-    />
+    <Suspense>
+      <Calendar
+        localizer={localizer}
+        events={calendarEvents}
+        startAccessor="start"
+        endAccessor="end"
+        views={["work_week", "day"]}
+        view={view}
+        style={{ height: "98%" }}
+        onView={handleOnChangeView}
+        min={MIN_TIME}
+        max={MAX_TIME}
+      />
+    </Suspense>
   );
 };
 

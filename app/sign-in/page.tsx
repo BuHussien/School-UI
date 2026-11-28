@@ -1,8 +1,19 @@
 import { db } from "@/prisma/db";
+
 const LoginPage = async () => {
-  const admins = await db.orm.public.Student.all();
+  const students = await db.student.findMany({
+    select: {
+      id: true,
+      username: true,
+    },
+  });
+
   return (
-    <div>{admins.map(admin => <h1>{admin.username}</h1>)}</div>
+    <div>
+      {students.map((student) => (
+        <h1 key={student.id}>{student.username}</h1>
+      ))}
+    </div>
   );
 };
 
